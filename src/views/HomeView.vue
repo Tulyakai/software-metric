@@ -46,6 +46,9 @@ import TextField from "@/components/field/TextField.vue";
 import PrimaryButton from "@/components/button/PrimaryButton.vue";
 import { Form } from "vee-validate";
 import * as yup from "yup";
+import axios from "axios";
+import LocService from "@/services/LocService";
+import GitHubService from "@/services/GitHubService";
 
 export default {
   name: "HomeView",
@@ -64,8 +67,39 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      console.log("submit");
+    handleSubmit(values) {
+      const urls = [values.repoOne, values.repoTwo];
+      let infos = [];
+      let locs = [];
+      urls.map((value) => {
+        const { owner, repo } = this.extractUrl(value);
+        axios
+          .all([
+            GitHubService.getRepositories(owner, repo),
+            LocService.getLoc(owner, repo),
+          ])
+          .then(
+            axios.spread((...responses) => {
+              const responseOne = responses[0].data;
+              const responseTwo =
+                responses[1].data[responses[1].data.length - 1]["linesOfCode"];
+              infos.push({ name: repo, info: responseOne });
+              locs.push({ name: repo, loc: responseTwo });
+              console.log(infos);
+              console.log(locs);
+              if (infos.length === 2 && locs.length === 2) {
+                this.$store.commit("setRepos", { infos, locs });
+                this.$router.push("/dashboard");
+              }
+            })
+          );
+      });
+    },
+    extractUrl(url) {
+      const urlArr = url.split("/");
+      const repo = urlArr.pop();
+      const owner = urlArr.pop();
+      return { owner, repo };
     },
   },
 };

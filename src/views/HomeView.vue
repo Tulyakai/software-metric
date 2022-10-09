@@ -68,6 +68,12 @@ export default {
   },
   methods: {
     handleSubmit(values) {
+      this.$swal.fire({
+        icon: "success",
+        title: "The process is running",
+        showConfirmButton: false,
+        timer: 2000,
+      });
       const urls = [values.repoOne, values.repoTwo];
       let infos = [];
       let locs = [];
@@ -85,9 +91,13 @@ export default {
                 responses[1].data[responses[1].data.length - 1]["linesOfCode"];
               infos.push({ name: repo, info: responseOne });
               locs.push({ name: repo, loc: responseTwo });
-              console.log(infos);
-              console.log(locs);
               if (infos.length === 2 && locs.length === 2) {
+                this.$swal.fire({
+                  icon: "success",
+                  title: "The process is done",
+                  showConfirmButton: false,
+                  timer: 2000,
+                });
                 this.$store.commit("setRepos", { infos, locs });
                 this.$router.push("/dashboard");
               }

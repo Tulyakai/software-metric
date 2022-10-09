@@ -11,7 +11,7 @@
         </h2>
         <p>has wiki: {{ v.info.has_wiki }}</p>
         <p>created at: {{ parseDate(v.info.created_at) }}</p>
-        <p>last updated at: {{ parseDate(v.info.updated_at) }}</p>
+        <p>last updated at: {{ parseDate(v.info.pushed_at) }}</p>
       </div>
     </div>
     <div
@@ -44,24 +44,32 @@ export default {
             data: this.$store.getters.getRepos.infos.map(
               (info) => info.info.forks_count
             ),
-            borderColor: "#6E7EF5",
-            backgroundColor: "#6E7EF5",
+            borderColor: "#7F6EEA",
+            backgroundColor: "#7F6EEA",
           },
           {
             label: "Watcher",
             data: this.$store.getters.getRepos.infos.map(
               (info) => info.info.watchers_count
             ),
-            borderColor: "#B277DE",
-            backgroundColor: "#B277DE",
+            borderColor: "#E26EEA",
+            backgroundColor: "#E26EEA",
+          },
+          {
+            label: "Subscribers",
+            data: this.$store.getters.getRepos.infos.map(
+              (info) => info.info.subscribers_count
+            ),
+            borderColor: "#74EA6E",
+            backgroundColor: "#74EA6E",
           },
           {
             label: "Issue",
             data: this.$store.getters.getRepos.infos.map(
               (info) => info.info.open_issues_count
             ),
-            borderColor: "#B23243",
-            backgroundColor: "#B23243",
+            borderColor: "#EA6E6E",
+            backgroundColor: "#EA6E6E",
           },
         ],
       },

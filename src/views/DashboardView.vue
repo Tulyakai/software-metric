@@ -15,7 +15,7 @@
       </div>
     </div>
     <div
-      class="flex flex-row flex-wrap gap-x-5 border h-full justify-center items-center"
+      class="flex flex-col md:flex-row gap-x-2 mt-4 h-full justify-center items-center"
     >
       <div class="flex flex-col">
         <h3 class="text-lg font-bold">Label Something</h3>
@@ -25,15 +25,20 @@
         <h3 class="text-lg font-bold">LOC distribution</h3>
         <PieChart :data="pieData" />
       </div>
+      <div class="flex flex-col">
+        <h3 class="text-lg font-bold">Activeness of the developmentteam</h3>
+        <LineChart :data="lineData" />
+      </div>
     </div>
   </div>
 </template>
 <script>
-import BarChart from "@/components/BarChart.vue";
-import PieChart from "@/components/PieChart.vue";
+import BarChart from "@/components/chart/BarChart.vue";
+import PieChart from "@/components/chart/PieChart.vue";
+import LineChart from "@/components/chart/LineChart.vue";
 export default {
   name: "DashboardView",
-  components: { BarChart, PieChart },
+  components: { BarChart, PieChart, LineChart },
   data() {
     return {
       chartData: {
@@ -79,6 +84,29 @@ export default {
           {
             backgroundColor: ["#41B883", "#00D8FF"],
             data: this.$store.getters.getRepos.locs.map((loc) => loc.loc),
+          },
+        ],
+      },
+      lineData: {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ],
+        datasets: [
+          {
+            label: "Repo One",
+            backgroundColor: "#41B883",
+            data: [40, 39, 10, 40, 39, 80, 40],
+          },
+          {
+            label: "Repo Two",
+            backgroundColor: "#00D8FF",
+            data: [20, 19, 14, 4, 9, 81, 20],
           },
         ],
       },

@@ -49,7 +49,7 @@ import * as yup from "yup";
 import axios from "axios";
 import LocService from "@/services/LocService";
 import GitHubService from "@/services/GitHubService";
-
+import ROUTE_PATH from "@/constants/router.js";
 export default {
   name: "HomeView",
   components: {
@@ -72,7 +72,7 @@ export default {
         icon: "success",
         title: "The process is running",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 4000,
       });
       const urls = [values.repoOne, values.repoTwo];
       let infos = [];
@@ -99,7 +99,7 @@ export default {
                   timer: 2000,
                 });
                 this.$store.commit("setRepos", { infos, locs });
-                this.$router.push("/dashboard");
+                this.$router.push(ROUTE_PATH.DASHBOARD);
               }
             })
           );

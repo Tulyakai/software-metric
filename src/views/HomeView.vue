@@ -29,7 +29,7 @@
             Object.keys(errors).length
               ? this.$swal.fire({
                   icon: 'error',
-                  title: 'โปรดกรอกข้อมูลให้ครบถ้วน',
+                  title: 'Oops...',
                   showConfirmButton: false,
                   timer: 2000,
                 })

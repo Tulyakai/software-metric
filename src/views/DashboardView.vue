@@ -1,0 +1,85 @@
+<template>
+  <div class="mx-4 mt-5 flex max-w-[1200px] flex-col md:mx-auto min-h-screen">
+    <h1 class="text-4xl my-5 font-bold">Dashboard</h1>
+    <div
+      class="flex flex-row flex-wrap gap-4 justify-between"
+      v-if="this.$store.getters.getRepos && this.$store.getters.getRepos.infos"
+    >
+      <div v-for="(v, k) in this.$store.getters.getRepos.infos" :key="k">
+        <h2 class="text-xl font-bold">
+          {{ v.name }}
+        </h2>
+        <p>has wiki: {{ v.info.has_wiki }}</p>
+        <p>created at: {{ parseDate(v.info.created_at) }}</p>
+        <p>last updated at: {{ parseDate(v.info.updated_at) }}</p>
+      </div>
+    </div>
+    <div
+      class="flex flex-row flex-wrap gap-x-5 border h-full justify-center items-center"
+    >
+      <div class="flex flex-col">
+        <h3 class="text-lg font-bold">Label Something</h3>
+        <BarChart :data="chartData" />
+      </div>
+      <div class="flex flex-col">
+        <h3 class="text-lg font-bold">LOC distribution</h3>
+        <PieChart :data="pieData" />
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import BarChart from "@/components/BarChart.vue";
+import PieChart from "@/components/PieChart.vue";
+export default {
+  name: "DashboardView",
+  components: { BarChart, PieChart },
+  data() {
+    return {
+      chartData: {
+        labels: this.$store.getters.getRepos.infos.map((info) => info.name),
+        datasets: [
+          {
+            label: "Fork",
+            data: this.$store.getters.getRepos.infos.map(
+              (info) => info.info.forks_count
+            ),
+            borderColor: "#6E7EF5",
+            backgroundColor: "#6E7EF5",
+          },
+          {
+            label: "Watcher",
+            data: this.$store.getters.getRepos.infos.map(
+              (info) => info.info.watchers_count
+            ),
+            borderColor: "#B277DE",
+            backgroundColor: "#B277DE",
+          },
+          {
+            label: "Issue",
+            data: this.$store.getters.getRepos.infos.map(
+              (info) => info.info.open_issues_count
+            ),
+            borderColor: "#B23243",
+            backgroundColor: "#B23243",
+          },
+        ],
+      },
+      pieData: {
+        labels: this.$store.getters.getRepos.locs.map((loc) => loc.name),
+        datasets: [
+          {
+            backgroundColor: ["#41B883", "#00D8FF"],
+            data: this.$store.getters.getRepos.locs.map((loc) => loc.loc),
+          },
+        ],
+      },
+    };
+  },
+  methods: {
+    parseDate(date) {
+      return new Date(date).toLocaleDateString();
+    },
+  },
+};
+</script>

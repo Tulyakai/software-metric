@@ -78,37 +78,37 @@ export default {
       let infos = [];
       let locs = [];
       let files = [];
-      let commits = [];
+      // let commits = [];
       urls.map((value) => {
         const { owner, repo } = this.extractUrl(value);
         axios
           .all([
             GitHubService.getRepositories(owner, repo),
             LocService.getLoc(owner, repo),
-            GitHubService.getCommits(owner, repo),
+            // GitHubService.getCommits(owner, repo),
           ])
           .then(
             axios.spread((...responses) => {
               const responseOne = responses[0].data;
               const responseTwo =
                 responses[1].data[responses[1].data.length - 1];
-              const responseThree = responses[2].data.map(
-                (value) =>
-                  value.commit.committer.date.split("-")[1] +
-                  "/" +
-                  value.commit.committer.date.split("-")[0]
-              );
+              // const responseThree = responses[2].data.map(
+              //   (value) =>
+              //     value.commit.committer.date.split("-")[1] +
+              //     "/" +
+              //     value.commit.committer.date.split("-")[0]
+              // );
 
               infos.push({ name: repo, info: responseOne });
               locs.push({ name: repo, loc: responseTwo["linesOfCode"] });
               files.push({ name: repo, file: responseTwo["files"] });
-              commits.push({ name: repo, commit: responseThree });
+              // commits.push({ name: repo, commit: responseThree });
 
               if (
                 infos.length === 2 &&
                 locs.length === 2 &&
-                files.length === 2 &&
-                commits.length === 2
+                files.length === 2
+                // && commits.length === 2
               ) {
                 this.$swal.fire({
                   icon: "success",
@@ -116,7 +116,7 @@ export default {
                   showConfirmButton: false,
                   timer: 2000,
                 });
-                this.$store.commit("setRepos", { infos, locs, files, commits });
+                this.$store.commit("setRepos", { infos, locs, files });
                 this.$router.push(ROUTE_PATH.DASHBOARD);
               }
             })

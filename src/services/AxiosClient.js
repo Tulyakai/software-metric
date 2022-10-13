@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiClient = axios.create({
   headers: {
-    Authorization: `Bearer ${process.env.VUE_APP_GITHUB_AUTH}`,
+    Authorization: '${{ secrets.API_GITHUB_TOKEN }}',
   },
 });
 export default apiClient;

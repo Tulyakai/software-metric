@@ -3,7 +3,7 @@
     <h1 class="text-4xl my-5 font-bold">Dashboard</h1>
     <div
       class="flex flex-row flex-wrap gap-4 justify-between"
-      v-if="this.$store.getters.getRepos && this.$store.getters.getRepos.infos"
+      v-if="this.$store.getters.getRepos"
     >
       <div v-for="(v, k) in this.$store.getters.getRepos.infos" :key="k">
         <h2 class="text-xl font-bold">
@@ -22,23 +22,33 @@
         <BarChart :data="chartData" />
       </div>
       <div class="flex flex-col">
-        <h3 class="text-lg font-bold">LOC distribution</h3>
-        <PieChart :data="pieData" />
+        <h3 class="text-lg font-bold cursor-pointer">LOC distribution</h3>
+        <PieChart :data="locData" />
       </div>
       <div class="flex flex-col">
-        <h3 class="text-lg font-bold">Activeness of the developmentteam</h3>
-        <LineChart :data="lineData" />
+        <h3 class="text-lg font-bold cursor-pointer">File distribution</h3>
+        <PieChart :data="fileData" />
       </div>
+      <!-- NOTE: LineChart compoenet injection -->
+      <!-- <div class="flex flex-col">
+        <h3 class="text-lg font-bold">Activeness of the development team</h3>
+        <LineChart :data="actData" />
+      </div> -->
     </div>
   </div>
 </template>
 <script>
 import BarChart from "@/components/chart/BarChart.vue";
 import PieChart from "@/components/chart/PieChart.vue";
-import LineChart from "@/components/chart/LineChart.vue";
+// NOTE: This is imprt linechart component
+// import LineChart from "@/components/chart/LineChart.vue";
 export default {
   name: "DashboardView",
-  components: { BarChart, PieChart, LineChart },
+  components: {
+    BarChart,
+    PieChart,
+    // LineChart
+  },
   data() {
     return {
       chartData: {
@@ -78,7 +88,7 @@ export default {
           },
         ],
       },
-      pieData: {
+      locData: {
         labels: this.$store.getters.getRepos.locs.map((loc) => loc.name),
         datasets: [
           {
@@ -87,34 +97,42 @@ export default {
           },
         ],
       },
-      lineData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
+      fileData: {
+        labels: this.$store.getters.getRepos.files.map((file) => file.name),
         datasets: [
           {
-            label: "Repo One",
-            backgroundColor: "#41B883",
-            data: [40, 39, 10, 40, 39, 80, 40],
-          },
-          {
-            label: "Repo Two",
-            backgroundColor: "#00D8FF",
-            data: [20, 19, 14, 4, 9, 81, 20],
+            backgroundColor: ["#41B883", "#00D8FF"],
+            data: this.$store.getters.getRepos.files.map((file) => file.file),
           },
         ],
       },
+      // NOTE: This is a dummy data for line chart
+      // actData: {
+      //   labels: this.$store.getters.getRepos.commits[1].commit,
+      //   datasets: [
+      //     {
+      //       labels: "repo1",
+      //       backgroundColor: "#41B883",
+      //       data: [40, 39, 10, 40, 39, 80, 40],
+      //     },
+      //     {
+      //       labels: "repo2",
+      //       backgroundColor: "#00D8FF",
+      //       data: [20, 19, 14, 4, 9, 81, 20],
+      //     },
+      //   ],
+      // },
     };
   },
   methods: {
     parseDate(date) {
       return new Date(date).toLocaleDateString();
+    },
+    parseDateLine(date) {
+      return new Date(date).toLocaleDateString();
+    },
+    parseLineData(data) {
+      return data.map((d) => d.commit);
     },
   },
 };

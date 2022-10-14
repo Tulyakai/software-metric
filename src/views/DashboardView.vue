@@ -1,17 +1,28 @@
 <template>
   <div class="mx-4 mt-5 flex max-w-[1200px] flex-col md:mx-auto min-h-screen">
     <h1 class="text-4xl my-5 font-bold">Dashboard</h1>
-    <div
-      class="flex flex-row flex-wrap gap-4 justify-between"
-      v-if="this.$store.getters.getRepos"
-    >
-      <div v-for="(v, k) in this.$store.getters.getRepos.infos" :key="k">
-        <h2 class="text-xl font-bold">
-          {{ v.name }}
-        </h2>
-        <p>has wiki: {{ v.info.has_wiki }}</p>
-        <p>created at: {{ parseDate(v.info.created_at) }}</p>
-        <p>last updated at: {{ parseDate(v.info.pushed_at) }}</p>
+    <div>
+      <div
+        class="md:grid md:grid-cols-2 justify-between grid grid-cols-1"
+        v-if="this.$store.getters.getRepos"
+      >
+        <div v-for="(v, k) in this.$store.getters.getRepos.infos" :key="k">
+          <h2 class="text-xl font-bold">
+            {{ v.name }}
+          </h2>
+          <span class="font-bold">has wiki: </span
+          ><span>{{ v.info.has_wiki }}</span
+          ><br />
+          <span class="font-bold">created at: </span>
+          <span>{{ parseDate(v.info.created_at) }}</span
+          ><br />
+          <span class="font-bold">last updated at: </span>
+          <span>{{ parseDate(v.info.pushed_at) }}</span>
+        </div>
+        <div v-for="(v, k) in this.$store.getters.getRepos.locs" :key="k">
+          <span class="font-bold">project size: </span
+          ><span>{{ projectSize(v.loc) }}</span>
+        </div>
       </div>
     </div>
     <div
@@ -106,6 +117,7 @@ export default {
           },
         ],
       },
+      size: this.$store.getters.getRepos.locs.loc,
       // NOTE: This is a dummy data for line chart
       // actData: {
       //   labels: this.$store.getters.getRepos.commits[1].commit,
@@ -133,6 +145,21 @@ export default {
     },
     parseLineData(data) {
       return data.map((d) => d.commit);
+    },
+    projectSize(size) {
+      if (size <= 1000) {
+        return "Tiny";
+      } else if (size > 1000 && size <= 5000) {
+        return "Small";
+      } else if (size > 5000 && size <= 20000) {
+        return "Medium";
+      } else if (size > 20000 && size <= 50000) {
+        return "Large";
+      } else if (size > 50000 && size <= 250000) {
+        return "Very Large";
+      } else {
+        return "Huge";
+      }
     },
   },
 };

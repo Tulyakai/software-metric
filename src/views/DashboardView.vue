@@ -29,7 +29,7 @@
       class="flex flex-col md:flex-row gap-x-2 mt-4 h-full justify-center items-center"
     >
       <div class="flex flex-col">
-        <h3 class="text-lg font-bold">Label Something</h3>
+        <h3 class="text-lg font-bold">Project statistic</h3>
         <BarChart :data="chartData" />
       </div>
       <div class="flex flex-col">
